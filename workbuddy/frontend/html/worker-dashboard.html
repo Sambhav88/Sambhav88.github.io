@@ -1,0 +1,1913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worker Dashboard - WorkBuddy</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        :root {
+            --primary-color: #2e3338;
+            --secondary-color: #ff6c00;
+            --accent-color: #ff6c00;
+            --light-bg: #f8f8f8;
+            --dark-text: #2e3338;
+            --light-text: #6f7275;
+            --white: #ffffff;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        .logo-icon {
+            margin-right: 10px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+
+        nav ul li a {
+            color: var(--dark-text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            position: relative;
+        }
+
+        nav ul li a:hover {
+            color: var(--accent-color);
+            background-color: rgba(255, 108, 0, 0.1);
+        }
+
+        nav ul li a.active {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        nav ul li a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            transition: background-color 0.3s;
+        }
+
+        .user-profile:hover {
+            background-color: rgba(255, 108, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: var(--dark-text);
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: var(--white);
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: var(--border-radius);
+            z-index: 1;
+            top: 100%;
+            margin-top: 10px;
+        }
+
+        .dropdown-content a {
+            color: var(--dark-text);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+            border-radius: 0;
+        }
+
+        .dropdown-content a:hover {
+            background-color: rgba(255, 108, 0, 0.1);
+            color: var(--accent-color);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        #language-selector {
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            border: 1px solid #ddd;
+            background-color: var(--white);
+            font-size: 0.9rem;
+            margin-left: 1rem;
+        }
+
+        /* Breadcrumb Styles */
+        .breadcrumb-container {
+            background-color: var(--light-bg);
+            padding: 1rem 0;
+        }
+        
+        .breadcrumb {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .breadcrumb-item a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .breadcrumb-item a:hover {
+            text-decoration: underline;
+        }
+        
+        .breadcrumb-item:not(:last-child)::after {
+            content: ">";
+            margin: 0 0.5rem;
+            color: var(--light-text);
+        }
+        
+        .breadcrumb-item.active {
+            color: var(--light-text);
+        }
+
+        .dashboard-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .sidebar {
+            flex: 1;
+            min-width: 250px;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            height: fit-content;
+            box-shadow: var(--shadow);
+        }
+        
+        .sidebar h3 {
+            margin-top: 0;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar ul li {
+            margin-bottom: 1rem;
+        }
+        
+        .sidebar ul li a {
+            color: var(--light-text);
+            text-decoration: none;
+            display: block;
+            padding: 0.75rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar ul li a:hover, 
+        .sidebar ul li a.active {
+            background-color: rgba(255, 108, 0, 0.1);
+            color: var(--accent-color);
+        }
+        
+        .sidebar-icon {
+            width: 28px;
+            height: 28px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 12px;
+        }
+        
+        .main-content {
+            flex: 3;
+            min-width: 300px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .welcome-card {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(255, 108, 0, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        .welcome-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .welcome-icon {
+            width: 70px;
+            height: 70px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 20px;
+            background-image: url('../images/dashboard/worker-dashboard.svg');
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+        }
+        
+        .welcome-content h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .welcome-content p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin: 0;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s;
+            border-top: 5px solid var(--accent-color);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0 auto 1rem;
+            filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
+        }
+        
+        .stat-card h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+        
+        .section {
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .section h3 {
+            margin: 0;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+        
+        .section-icon {
+            width: 30px;
+            height: 30px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-right: 12px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: var(--white);
+            padding: 14px 28px;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: 2px solid var(--accent-color);
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(255, 108, 0, 0.3);
+        }
+
+        .btn:hover {
+            background-color: #e06100;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 108, 0, 0.4);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: #fff;
+            border: 2px solid var(--accent-color);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #e06100, #c25500);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 108, 0, 0.4);
+        }
+        
+        .job-card {
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            transition: all 0.3s;
+            background: var(--white);
+            box-shadow: var(--shadow);
+        }
+        
+        .job-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.7rem;
+            align-items: center;
+        }
+        
+        .job-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        
+        .job-status {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        
+        .status-pending {
+            background-color: #f39c12;
+            color: #fff;
+        }
+        
+        .status-accepted {
+            background-color: #2ecc71;
+            color: #fff;
+        }
+        
+        .status-completed {
+            background-color: var(--accent-color);
+            color: #fff;
+        }
+        
+        .status-active {
+            background-color: #9b59b6;
+            color: #fff;
+        }
+        
+        .job-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+            color: var(--light-text);
+            flex-wrap: wrap;
+            gap: 0.7rem;
+        }
+        
+        .job-actions {
+            display: flex;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn-small {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-accept {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: #fff;
+        }
+        
+        .btn-accept:hover {
+            background: linear-gradient(135deg, #27ae60, #219653);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-reject {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: #fff;
+        }
+        
+        .btn-reject:hover {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn-complete {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: #fff;
+        }
+        
+        .btn-complete:hover {
+            background: linear-gradient(135deg, #e06100, #c25500);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 108, 0, 0.3);
+        }
+        
+        .btn-negotiate {
+            background: linear-gradient(135deg, #f39c12, #d35400);
+            color: #fff;
+        }
+        
+        .btn-negotiate:hover {
+            background: linear-gradient(135deg, #d35400, #ba4a00);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3);
+        }
+        
+        .availability-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin-top: 1.2rem;
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 70px;
+            height: 34px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: #2ecc71;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(36px);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-active {
+            background-color: #2ecc71;
+        }
+        
+        .status-inactive {
+            background-color: #e74c3c;
+        }
+        
+        .review-card {
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            transition: all 0.3s;
+            background: var(--white);
+            box-shadow: var(--shadow);
+        }
+        
+        .review-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.7rem;
+            align-items: center;
+        }
+        
+        .review-rating {
+            color: #f39c12;
+            font-size: 1.2rem;
+        }
+        
+        .account-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .info-card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: all 0.3s;
+            box-shadow: var(--shadow);
+        }
+        
+        .info-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-card h4 {
+            color: var(--primary-color);
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+        
+        .info-item {
+            margin-bottom: 1rem;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: var(--light-text);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        
+        .info-value {
+            color: var(--primary-color);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 3rem 0 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -8px;
+            width: 40px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-column ul li a {
+            color: #aaa;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: var(--accent-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), #1a1f23);
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .close {
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .close:hover {
+            color: var(--accent-color);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .negotiation-info {
+            background: linear-gradient(to right, #f8f9fa, #fff);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            border: 1px solid #eee;
+        }
+        
+        .negotiation-info h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        .chat-container {
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .chat-messages {
+            height: 250px;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: #f8f9fa;
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+        }
+        
+        .message.customer {
+            justify-content: flex-end;
+        }
+        
+        .message.worker {
+            justify-content: flex-start;
+        }
+        
+        .message.system {
+            justify-content: center;
+        }
+        
+        .message-bubble {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .customer-bubble {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .worker-bubble {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .system-bubble {
+            background: #e9ecef;
+            color: var(--dark-text);
+            text-align: center;
+            font-size: 0.9rem;
+            max-width: 100%;
+        }
+        
+        .message-info {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            opacity: 0.8;
+        }
+        
+        .price-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+        
+        .price-input label {
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 0;
+        }
+        
+        .price-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+        }
+        
+        .price-input button {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .price-input button:hover {
+            background: linear-gradient(135deg, #e06100, #c25500);
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            background-color: white;
+            border-top: 1px solid #ddd;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            border-right: none;
+        }
+        
+        .chat-input button {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .chat-input button:hover {
+            background: linear-gradient(135deg, #e06100, #c25500);
+        }
+        
+        .negotiation-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .btn-primary, .btn-secondary {
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #e06100, #c25500);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #7f8c8d, #6c7a7b);
+            transform: translateY(-2px);
+        }
+        
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .job-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .job-details {
+                flex-direction: column;
+            }
+            
+            .header-container {
+                flex-direction: column;
+                padding: 10px 0;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 0.3rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="home.html" class="logo">
+                <div class="logo-icon">W</div>
+                Work<span>Buddy</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="worker-dashboard.html" class="active">Dashboard</a></li>
+                    <li><a href="contact-us.html">Contact Us</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <div class="dropdown">
+                    <div class="user-profile">
+                        <div class="user-avatar">RK</div>
+                        <div class="user-name">Rajesh Kumar</div>
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="worker-dashboard.html#account-section">My Profile</a>
+                        <a href="worker-dashboard.html#account-section">Settings</a>
+                        <a href="index.html">Logout</a>
+                    </div>
+                </div>
+                <select id="language-selector" onchange="setCurrentLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="mr">मराठी</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <section class="dashboard-hero">
+        <div class="container dashboard-hero-content">
+            <h1>Welcome Back, Worker!</h1>
+            <p>Manage your profile, bookings, and earnings</p>
+        </div>
+    </section>
+
+    <main>
+        <div class="container">
+            <div class="dashboard-container">
+                <div class="sidebar">
+                    <h3>Navigation</h3>
+                    <ul>
+                        <li><a href="#dashboard" class="active" data-section="dashboard">Dashboard</a></li>
+                        <li><a href="#bookings" data-section="bookings">My Bookings</a></li>
+                        <li><a href="#schedule" data-section="schedule">Schedule</a></li>
+                        <li><a href="#earnings" data-section="earnings">Earnings</a></li>
+                        <li><a href="#reviews" data-section="reviews">Reviews</a></li>
+                        <li><a href="#account" data-section="account">Account</a></li>
+                    </ul>
+                    
+                    <div class="availability-toggle">
+                        <span>Status:</span>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="availabilityToggle" checked>
+                            <span class="slider"></span>
+                        </label>
+                        <span id="statusText">Available</span>
+                    </div>
+                </div>
+                
+                <div class="main-content">
+                    <!-- Dashboard Overview Section -->
+                    <div class="dashboard-section" id="dashboard-section">
+                        <div class="dashboard-header">
+                            <h2>Dashboard Overview</h2>
+                        </div>
+                        
+                        <div class="welcome-card">
+                            <div class="welcome-icon"></div>
+                            <div class="welcome-content">
+                                <h2>Welcome back, Rajesh!</h2>
+                                <p>You have 3 new booking requests and 2 pending negotiations</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-container">
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background-image: url('../images/dashboard/total-jobs.svg');"></div>
+                                <h3>Total Jobs</h3>
+                                <div class="number">128</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background-image: url('../images/dashboard/earnings.svg');"></div>
+                                <h3>Total Earnings</h3>
+                                <div class="number">₹42,500</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background-image: url('../images/dashboard/rating.svg');"></div>
+                                <h3>Average Rating</h3>
+                                <div class="number">4.9</div>
+                            </div>
+                            
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background-image: url('../images/dashboard/pending.svg');"></div>
+                                <h3>Pending Requests</h3>
+                                <div class="number">5</div>
+                            </div>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-header">
+                                <h3>
+                                    <div class="section-icon" style="background-image: url('../images/dashboard/recent-bookings.svg');"></div>
+                                    Recent Booking Requests
+                                </h3>
+                            </div>
+                            
+                            <div class="job-card">
+                                <div class="job-header">
+                                    <div class="job-title">Electrician Service</div>
+                                    <div class="job-status status-pending">Pending</div>
+                                </div>
+                                <div class="job-details">
+                                    <div><strong>Customer:</strong> John Doe</div>
+                                    <div><strong>Date:</strong> Today, 10:00 AM</div>
+                                    <div><strong>Location:</strong> 123 Main St, Mumbai</div>
+                                    <div><strong>Estimated Price:</strong> ₹1,200</div>
+                                </div>
+                                <div class="job-actions">
+                                    <button class="btn-small btn-accept" onclick="acceptBooking(1)">Accept</button>
+                                    <button class="btn-small btn-reject" onclick="rejectBooking(1)">Reject</button>
+                                    <button class="btn-small btn-negotiate" onclick="openNegotiationModal('John Doe', 'Electrician Service', 1200)">Negotiate</button>
+                                </div>
+                            </div>
+                            
+                            <div class="job-card">
+                                <div class="job-header">
+                                    <div class="job-title">Wiring Check</div>
+                                    <div class="job-status status-pending">Pending</div>
+                                </div>
+                                <div class="job-details">
+                                    <div><strong>Customer:</strong> Smith Family</div>
+                                    <div><strong>Date:</strong> Today, 2:00 PM</div>
+                                    <div><strong>Location:</strong> 456 Oak Ave, Mumbai</div>
+                                    <div><strong>Estimated Price:</strong> ₹800</div>
+                                </div>
+                                <div class="job-actions">
+                                    <button class="btn-small btn-accept" onclick="acceptBooking(2)">Accept</button>
+                                    <button class="btn-small btn-reject" onclick="rejectBooking(2)">Reject</button>
+                                    <button class="btn-small btn-negotiate" onclick="openNegotiationModal('Smith Family', 'Wiring Check', 800)">Negotiate</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- My Bookings Section -->
+                    <div class="dashboard-section" id="bookings-section" style="display: none;">
+                        <div class="dashboard-header">
+                            <h2>My Bookings</h2>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-header">
+                                <h3>
+                                    <div class="section-icon" style="background-image: url('../images/dashboard/my-bookings.svg');"></div>
+                                    Upcoming Bookings
+                                </h3>
+                            </div>
+                            
+                            <div class="job-card">
+                                <div class="job-header">
+                                    <div class="job-title">Electrician Service</div>
+                                    <div class="job-status status-accepted">Accepted</div>
+                                </div>
+                                <div class="job-details">
+                                    <div><strong>Customer:</strong> John Doe</div>
+                                    <div><strong>Date:</strong> Today, 10:00 AM</div>
+                                    <div><strong>Location:</strong> 123 Main St, Mumbai</div>
+                                    <div><strong>Agreed Price:</strong> ₹1,200</div>
+                                </div>
+                                <div class="job-actions">
+                                    <button class="btn-small btn-complete">Mark as Complete</button>
+                                    <button class="btn-small btn-negotiate">Contact Customer</button>
+                                </div>
+                            </div>
+                            
+                            <div class="job-card">
+                                <div class="job-header">
+                                    <div class="job-title">Wiring Check</div>
+                                    <div class="job-status status-accepted">Accepted</div>
+                                </div>
+                                <div class="job-details">
+                                    <div><strong>Customer:</strong> Smith Family</div>
+                                    <div><strong>Date:</strong> Today, 2:00 PM</div>
+                                    <div><strong>Location:</strong> 456 Oak Ave, Mumbai</div>
+                                    <div><strong>Agreed Price:</strong> ₹800</div>
+                                </div>
+                                <div class="job-actions">
+                                    <button class="btn-small btn-complete">Mark as Complete</button>
+                                    <button class="btn-small btn-negotiate">Contact Customer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Schedule Section -->
+                    <div class="dashboard-section" id="schedule-section" style="display: none;">
+                        <div class="dashboard-header">
+                            <h2>My Schedule</h2>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-header">
+                                <h3>
+                                    <div class="section-icon" style="background-image: url('../images/dashboard/schedule.svg');"></div>
+                                    Today's Schedule
+                                </h3>
+                            </div>
+                            
+                            <div class="job-card">
+                                <div class="job-header">
+                                    <div class="job-title">Electrician Service</div>
+                                    <div class="job-status status-accepted">Accepted</div>
+                                </div>
+                                <div class="job-details">
+                                    <div><strong>Customer:</strong> John Doe</div>
+                                    <div><strong>Time:</strong> 10:00 AM - 12:00 PM</div>
+                                    <div><strong>Location:</strong> 123 Main St, Mumbai</div>
+                                    <div><strong>Agreed Price:</strong> ₹1,200</div>
+                                </div>
+                                <div class="job-actions">
+                                    <button class="btn-small btn-complete">Mark as Complete</button>
+                                    <button class="btn-small btn-negotiate">Navigate</button>
+                                </div>
+                            </div>
+                            
+                            <div class="job-card">
+                                <div class="job-header">
+                                    <div class="job-title">Wiring Check</div>
+                                    <div class="job-status status-accepted">Accepted</div>
+                                </div>
+                                <div class="job-details">
+                                    <div><strong>Customer:</strong> Smith Family</div>
+                                    <div><strong>Time:</strong> 2:00 PM - 3:30 PM</div>
+                                    <div><strong>Location:</strong> 456 Oak Ave, Mumbai</div>
+                                    <div><strong>Agreed Price:</strong> ₹800</div>
+                                </div>
+                                <div class="job-actions">
+                                    <button class="btn-small btn-complete">Mark as Complete</button>
+                                    <button class="btn-small btn-negotiate">Navigate</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Earnings Section -->
+                    <div class="dashboard-section" id="earnings-section" style="display: none;">
+                        <div class="dashboard-header">
+                            <h2>My Earnings</h2>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-header">
+                                <h3>
+                                    <div class="section-icon" style="background-image: url('../images/dashboard/earnings.svg');"></div>
+                                    Earnings Summary
+                                </h3>
+                            </div>
+                            
+                            <div class="stats-container">
+                                <div class="stat-card">
+                                    <div class="stat-icon" style="background-image: url('../images/dashboard/today.svg');"></div>
+                                    <h3>Today</h3>
+                                    <div class="number">₹2,000</div>
+                                </div>
+                                
+                                <div class="stat-card">
+                                    <div class="stat-icon" style="background-image: url('../images/dashboard/week.svg');"></div>
+                                    <h3>This Week</h3>
+                                    <div class="number">₹12,500</div>
+                                </div>
+                                
+                                <div class="stat-card">
+                                    <div class="stat-icon" style="background-image: url('../images/dashboard/month.svg');"></div>
+                                    <h3>This Month</h3>
+                                    <div class="number">₹42,500</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Reviews Section -->
+                    <div class="dashboard-section" id="reviews-section" style="display: none;">
+                        <div class="dashboard-header">
+                            <h2>Customer Reviews</h2>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-header">
+                                <h3>
+                                    <div class="section-icon" style="background-image: url('../images/dashboard/reviews.svg');"></div>
+                                    Recent Reviews
+                                </h3>
+                            </div>
+                            
+                            <div class="review-card">
+                                <div class="review-header">
+                                    <div class="reviewer-avatar">JD</div>
+                                    <div class="reviewer-info">
+                                        <h3>John Doe</h3>
+                                        <div class="rating">★★★★★</div>
+                                    </div>
+                                    <div class="review-date">2 days ago</div>
+                                </div>
+                                <div class="review-content">
+                                    <p>Excellent service! Rajesh was punctual, professional, and fixed my electrical issue quickly. Highly recommended!</p>
+                                </div>
+                            </div>
+                            
+                            <div class="review-card">
+                                <div class="review-header">
+                                    <div class="reviewer-avatar">SF</div>
+                                    <div class="reviewer-info">
+                                        <h3>Smith Family</h3>
+                                        <div class="rating">★★★★★</div>
+                                    </div>
+                                    <div class="review-date">1 week ago</div>
+                                </div>
+                                <div class="review-content">
+                                    <p>Very skilled electrician. Fixed our wiring problem that other professionals couldn't solve. Fair pricing too!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Account Section -->
+                    <div class="dashboard-section" id="account-section" style="display: none;">
+                        <div class="dashboard-header">
+                            <h2>My Account</h2>
+                        </div>
+                        
+                        <div class="section">
+                            <div class="section-header">
+                                <h3>
+                                    <div class="section-icon" style="background-image: url('../images/dashboard/profile.svg');"></div>
+                                    Profile Information
+                                </h3>
+                            </div>
+                            
+                            <div class="account-info">
+                                <div class="info-card">
+                                    <h4>Personal Details</h4>
+                                    <div class="info-item">
+                                        <span class="info-label">Full Name</span>
+                                        <span class="info-value">Rajesh Kumar</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Email</span>
+                                        <span class="info-value">rajesh.kumar@example.com</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Phone</span>
+                                        <span class="info-value">+91 9876543210</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Location</span>
+                                        <span class="info-value">Mumbai, Maharashtra</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="info-card">
+                                    <h4>Professional Details</h4>
+                                    <div class="info-item">
+                                        <span class="info-label">Primary Skill</span>
+                                        <span class="info-value">Electrician</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Experience</span>
+                                        <span class="info-value">8 years</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Service Area</span>
+                                        <span class="info-value">Mumbai, Thane, Navi Mumbai</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-label">Average Rating</span>
+                                        <span class="info-value">4.9 ★</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Negotiation Modal -->
+        <div id="negotiationModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Price Negotiation</h2>
+                    <span class="close" onclick="closeNegotiationModal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="negotiation-info">
+                        <h3>Service: <span id="serviceName"></span></h3>
+                        <p>Customer: <span id="clientName"></span></p>
+                        <p>Original Price: <span id="originalPrice"></span></p>
+                        <p>Booking ID: <span id="bookingId"></span></p>
+                    </div>
+                    
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message system-message">
+                                <div class="message-bubble system-bubble">
+                                    Customer has proposed a price. You can accept, reject, or propose a counter offer.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="price-input">
+                            <label for="workerPriceInput">Your Proposed Price (₹):</label>
+                            <input type="number" id="workerPriceInput" placeholder="Enter your price" min="0">
+                            <button onclick="sendWorkerPriceProposal()">Send Proposal</button>
+                        </div>
+                        
+                        <div class="chat-input">
+                            <input type="text" id="workerMessageInput" placeholder="Type your message...">
+                            <button onclick="sendWorkerMessage()">Send</button>
+                        </div>
+                        
+                        <div class="negotiation-actions">
+                            <button class="btn-secondary" onclick="rejectNegotiation()">Reject</button>
+                            <button class="btn-primary" onclick="acceptCustomerPrice()">Accept Customer Price</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>WorkBuddy</h3>
+                    <ul>
+                        <li><a href="home.html">Home</a></li>
+                        <li><a href="home.html#categories">Categories</a></li>
+                        <li><a href="home.html#features">How It Works</a></li>
+                        <li><a href="contact-us.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>For Workers</h3>
+                    <ul>
+                        <li><a href="worker-registration.html">Join as Worker</a></li>
+                        <li><a href="worker-login.html">Worker Login</a></li>
+                        <li><a href="worker-dashboard.html">Worker Dashboard</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>For Customers</h3>
+                    <ul>
+                        <li><a href="customer-registration.html">Join as Customer</a></li>
+                        <li><a href="customer-login.html">Customer Login</a></li>
+                        <li><a href="customer-categories.html">Book Service</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="contact-us.html">Help Center</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 WorkBuddy. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/translations.js"></script>
+    <script>
+        // Section switching functionality
+        document.querySelectorAll('.sidebar ul li a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remove active class from all sidebar links
+                document.querySelectorAll('.sidebar ul li a').forEach(a => a.classList.remove('active'));
+                
+                // Add active class to clicked link
+                this.classList.add('active');
+                
+                // Hide all sections
+                document.querySelectorAll('.dashboard-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Show corresponding section
+                const sectionName = this.getAttribute('data-section');
+                document.getElementById(sectionName + '-section').style.display = 'block';
+            });
+        });
+        
+        // Availability toggle
+        document.getElementById('availabilityToggle').addEventListener('change', function() {
+            const isAvailable = this.checked;
+            const statusText = document.getElementById('statusText');
+            
+            if (isAvailable) {
+                statusText.textContent = 'Available';
+                statusText.style.color = '#2ecc71';
+            } else {
+                statusText.textContent = 'Unavailable';
+                statusText.style.color = '#e74c3c';
+            }
+        });
+        
+        // Store current negotiation data
+        let currentNegotiation = {
+            bookingId: null,
+            customerId: null,
+            service: null,
+            originalPrice: null
+        };
+        
+        // Polling interval for real-time updates
+        let pollingInterval = null;
+        
+        // Accept booking
+        function acceptBooking(jobId) {
+            alert(`Booking ${jobId} accepted!`);
+            // In a real implementation, this would update the booking status via API
+        }
+        
+        // Reject booking
+        function rejectBooking(jobId) {
+            if (confirm('Are you sure you want to reject this booking?')) {
+                alert(`Booking ${jobId} rejected!`);
+                // In a real implementation, this would update the booking status via API
+            }
+        }
+        
+        // Open negotiation modal
+        function openNegotiationModal(bookingId, clientName, service, price, customerId) {
+            // Store negotiation data
+            currentNegotiation.bookingId = bookingId;
+            currentNegotiation.customerId = customerId;
+            currentNegotiation.service = service;
+            currentNegotiation.originalPrice = price;
+            
+            document.getElementById('bookingId').textContent = bookingId;
+            document.getElementById('clientName').textContent = clientName;
+            document.getElementById('serviceName').textContent = service;
+            document.getElementById('originalPrice').textContent = `₹${price}`;
+            
+            // Load chat messages
+            loadChatMessages(bookingId);
+            
+            // Start polling for new messages
+            startPolling(bookingId);
+            
+            document.getElementById('negotiationModal').style.display = 'flex';
+        }
+        
+        // Start polling for new messages
+        function startPolling(bookingId) {
+            // Clear any existing polling
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+            }
+            
+            // Poll every 3 seconds for new messages
+            pollingInterval = setInterval(() => {
+                loadNewMessages(bookingId);
+            }, 3000);
+        }
+        
+        // Stop polling
+        function stopPolling() {
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+            }
+        }
+        
+        // Load chat messages
+        async function loadChatMessages(bookingId) {
+            try {
+                const messages = await window.WorkBuddyAPI.getMessages(bookingId);
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.innerHTML = '';
+                
+                messages.forEach(message => {
+                    if (message.senderType === 'SYSTEM') {
+                        addSystemMessage(message.content);
+                    } else if (message.senderType === 'CUSTOMER') {
+                        addCustomerMessage(message.content);
+                    } else if (message.senderType === 'WORKER') {
+                        addWorkerMessage(message.content);
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                addSystemMessage("Error loading chat history.");
+            }
+        }
+        
+        // Load new messages (for polling)
+        async function loadNewMessages(bookingId) {
+            try {
+                const messages = await window.WorkBuddyAPI.getMessages(bookingId);
+                const chatMessages = document.getElementById('chatMessages');
+                const currentMessageCount = chatMessages.children.length;
+                
+                // Only add new messages
+                if (messages.length > currentMessageCount - 1) { // -1 for the initial system message
+                    // Clear all messages and reload to maintain order
+                    chatMessages.innerHTML = '';
+                    
+                    messages.forEach(message => {
+                        if (message.senderType === 'SYSTEM') {
+                            addSystemMessage(message.content);
+                        } else if (message.senderType === 'CUSTOMER') {
+                            addCustomerMessage(message.content);
+                        } else if (message.senderType === 'WORKER') {
+                            addWorkerMessage(message.content);
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading new messages:', error);
+            }
+        }
+        
+        // Close negotiation modal
+        function closeNegotiationModal() {
+            document.getElementById('negotiationModal').style.display = 'none';
+            document.getElementById('workerPriceInput').value = '';
+            document.getElementById('workerMessageInput').value = '';
+            
+            // Stop polling when modal is closed
+            stopPolling();
+        }
+        
+        // Send worker price proposal
+        async function sendWorkerPriceProposal() {
+            const price = document.getElementById('workerPriceInput').value;
+            const serviceName = document.getElementById('serviceName').textContent;
+            
+            if (!price || price <= 0) {
+                alert('Please enter a valid price.');
+                return;
+            }
+            
+            try {
+                // Send the proposal to the backend
+                const proposalData = {
+                    workerId: 1, // This would come from the authenticated worker
+                    customerId: currentNegotiation.customerId,
+                    proposedPrice: parseFloat(price),
+                    service: serviceName
+                };
+                
+                const proposal = await window.WorkBuddyAPI.sendPriceProposal(currentNegotiation.bookingId, proposalData);
+                
+                // Add worker message
+                addWorkerMessage(`I propose ₹${price} for this service.`);
+                
+                // Clear input
+                document.getElementById('workerPriceInput').value = '';
+                
+                // Add system message
+                addSystemMessage("Your price proposal has been sent to the customer.");
+                
+            } catch (error) {
+                console.error('Error sending price proposal:', error);
+                addSystemMessage("Error sending proposal. Please try again.");
+            }
+        }
+        
+        // Send worker message
+        async function sendWorkerMessage() {
+            const message = document.getElementById('workerMessageInput').value.trim();
+            const serviceName = document.getElementById('serviceName').textContent;
+            
+            if (!message) {
+                return;
+            }
+            
+            try {
+                // Send the message to the backend
+                const messageData = {
+                    senderId: 1, // This would come from the authenticated worker
+                    receiverId: currentNegotiation.customerId,
+                    message: message
+                };
+                
+                const msg = await window.WorkBuddyAPI.sendMessage(currentNegotiation.bookingId, messageData);
+                
+                // Add worker message
+                addWorkerMessage(message);
+                
+                // Clear input
+                document.getElementById('workerMessageInput').value = '';
+                
+            } catch (error) {
+                console.error('Error sending message:', error);
+                addSystemMessage("Error sending message. Please try again.");
+            }
+        }
+        
+        // Add worker message to chat
+        function addWorkerMessage(text) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message worker';
+            messageDiv.innerHTML = `
+                <div class="message-bubble worker-bubble">
+                    ${text}
+                    <div class="message-info">You • Just now</div>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Add customer message to chat
+        function addCustomerMessage(text) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message customer';
+            messageDiv.innerHTML = `
+                <div class="message-bubble customer-bubble">
+                    ${text}
+                    <div class="message-info">Customer • Just now</div>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Add system message to chat
+        function addSystemMessage(text) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message system-message';
+            messageDiv.innerHTML = `
+                <div class="message-bubble system-bubble">
+                    ${text}
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Accept customer price
+        async function acceptCustomerPrice() {
+            const originalPrice = document.getElementById('originalPrice').textContent.replace('₹', '');
+            const serviceName = document.getElementById('serviceName').textContent;
+            
+            try {
+                // Accept the price proposal via API
+                const booking = await window.WorkBuddyAPI.acceptPriceProposal(
+                    currentNegotiation.bookingId, 
+                    currentNegotiation.customerId
+                );
+                
+                alert(`Price of ₹${originalPrice} accepted! The booking is now confirmed.`);
+                closeNegotiationModal();
+                
+                // Update UI to show booking as accepted
+                // This would normally be done via a page refresh or dynamic update
+            } catch (error) {
+                console.error('Error accepting price:', error);
+                alert('Error confirming booking. Please try again.');
+            }
+        }
+        
+        // Reject negotiation
+        function rejectNegotiation() {
+            if (confirm('Are you sure you want to reject this negotiation?')) {
+                alert('Negotiation rejected. The request will be reassigned.');
+                closeNegotiationModal();
+                // In a real implementation, this would update the booking status via API
+            }
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('negotiationModal');
+            if (event.target == modal) {
+                closeNegotiationModal();
+            }
+        }
+        
+        // Allow sending messages with Enter key
+        document.getElementById('workerMessageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendWorkerMessage();
+            }
+        });
+        
+        // Allow sending price proposals with Enter key
+        document.getElementById('workerPriceInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendWorkerPriceProposal();
+            }
+        });
+        
+        // Initialize with active dashboard section
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set dashboard as active section by default
+            document.querySelector('.sidebar ul li a[data-section="dashboard"]').classList.add('active');
+        });
+    </script>
+</body>
+</html>

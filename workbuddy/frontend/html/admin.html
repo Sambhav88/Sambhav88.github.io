@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - WorkBuddy</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .admin-dashboard {
+            padding: 2rem 0;
+        }
+        
+        .admin-dashboard h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #2c3e50;
+        }
+        
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+        
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .admin-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .action-card {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .action-card h3 {
+            margin-bottom: 1rem;
+            color: #2c3e50;
+        }
+        
+        .action-card ul {
+            list-style-type: none;
+        }
+        
+        .action-card ul li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .action-card ul li:last-child {
+            border-bottom: none;
+        }
+        
+        .action-card ul li a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .action-card ul li a:hover {
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>WorkBuddy Admin</h1>
+            <nav>
+                <ul>
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#users">Users</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#reports">Reports</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="dashboard" class="admin-dashboard">
+            <div class="container">
+                <h2>Admin Dashboard</h2>
+                
+                <div class="admin-stats">
+                    <div class="stat-card">
+                        <h3>Total Users</h3>
+                        <div class="number">1,248</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Total Workers</h3>
+                        <div class="number">842</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Active Jobs</h3>
+                        <div class="number">126</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Total Earnings</h3>
+                        <div class="number">₹4,26,842</div>
+                    </div>
+                </div>
+                
+                <div class="admin-actions">
+                    <div class="action-card">
+                        <h3>User Management</h3>
+                        <ul>
+                            <li><a href="#">View All Users</a></li>
+                            <li><a href="#">View All Workers</a></li>
+                            <li><a href="#">Verify Worker Documents</a></li>
+                            <li><a href="#">Suspend/Block Users</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="action-card">
+                        <h3>Service Management</h3>
+                        <ul>
+                            <li><a href="#">View All Services</a></li>
+                            <li><a href="#">Add New Service Category</a></li>
+                            <li><a href="#">Update Service Pricing</a></li>
+                            <li><a href="#">Manage Service Areas</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="action-card">
+                        <h3>Reports & Analytics</h3>
+                        <ul>
+                            <li><a href="#">Revenue Reports</a></li>
+                            <li><a href="#">Worker Performance</a></li>
+                            <li><a href="#">Customer Feedback</a></li>
+                            <li><a href="#">Geographical Analysis</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 WorkBuddy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

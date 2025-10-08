@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Test - WorkBuddy</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 data-translate="workbuddy">WorkBuddy</h1>
+            <nav>
+                <ul>
+                    <li><a href="home.html" data-translate="home">Home</a></li>
+                    <li>
+                        <select id="language-selector" onchange="setCurrentLanguage(this.value)">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी</option>
+                            <option value="mr">मराठी</option>
+                        </select>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="container">
+            <h2 data-translate="heroTitle">Connecting Skilled Workers with Customers</h2>
+            <p data-translate="heroDescription">Find reliable plumbers, electricians, painters, and other blue-collar workers in your area.</p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p data-translate="footer">&copy; 2025 WorkBuddy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/translations.js"></script>
+    <script>
+        // Set the language selector to the current language
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentLang = getCurrentLanguage();
+            document.getElementById('language-selector').value = currentLang;
+        });
+    </script>
+</body>
+</html>

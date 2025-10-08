@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - WorkBuddy</title>
+    <link rel="stylesheet" href="../css/workbuddy-styles.css">
+    <style>
+        /* Dashboard Hero */
+        .dashboard-hero {
+            background: linear-gradient(rgba(44, 62, 80, 0.85), rgba(44, 62, 80, 0.9)), url('../images/hero-bg.svg');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            color: var(--white);
+            position: relative;
+        }
+
+        .dashboard-hero-content {
+            max-width: 700px;
+        }
+
+        .dashboard-hero-content h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-hero-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Dashboard Sidebar */
+        .dashboard-sidebar {
+            flex: 1;
+            min-width: 250px;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            height: fit-content;
+            box-shadow: var(--shadow);
+        }
+
+        .user-profile-card {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .user-avatar-large {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), #c0392b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+
+        .user-profile-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .user-profile-card p {
+            color: var(--light-text);
+            margin-bottom: 1.5rem;
+        }
+
+        .user-stats {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .stat-label {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        .dashboard-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .dashboard-nav ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-nav ul li a {
+            color: var(--light-text);
+            text-decoration: none;
+            display: block;
+            padding: 0.75rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        .dashboard-nav ul li a:hover,
+        .dashboard-nav ul li a.active {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--accent-color);
+        }
+
+        /* Dashboard Main */
+        .dashboard-main {
+            flex: 3;
+            min-width: 300px;
+        }
+
+        .dashboard-section {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .section-header h2 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .view-all {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .view-all:hover {
+            text-decoration: underline;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .action-card {
+            background: var(--light-bg);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid var(--gray-200);
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: var(--accent-color);
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0 auto 1rem;
+        }
+
+        .action-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .action-card p {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+
+        /* Bookings List */
+        .bookings-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .booking-card {
+            border: 1px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: var(--transition);
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .booking-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .booking-icon {
+            width: 50px;
+            height: 50px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .booking-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.2rem;
+        }
+
+        .booking-info p {
+            color: var(--light-text);
+            margin: 0;
+        }
+
+        .booking-status {
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .confirmed {
+            background-color: var(--success-color);
+            color: var(--white);
+        }
+
+        .completed {
+            background-color: var(--accent-color);
+            color: var(--white);
+        }
+
+        .booking-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem 0;
+            border-top: 1px solid var(--gray-200);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .booking-details p {
+            margin: 0;
+            color: var(--light-text);
+        }
+
+        .booking-details strong {
+            color: var(--primary-color);
+        }
+
+        .booking-actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .payment-status {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .payment-status.completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .payment-status.pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .payment-status.failed {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Recommended Services */
+        .recommended-services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .service-card {
+            background: var(--light-bg);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid var(--gray-200);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: var(--accent-color);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0 auto 1rem;
+        }
+
+        .service-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .service-card p {
+            color: var(--light-text);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-rating {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            color: var(--warning-color);
+            font-weight: 500;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+
+        .close {
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--white);
+        }
+
+        .close:hover {
+            color: var(--gray-300);
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .negotiation-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .negotiation-info p {
+            margin: 0.5rem 0;
+        }
+
+        .negotiation-info span {
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .offer-input {
+            margin: 1.5rem 0;
+        }
+
+        .offer-input input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray-400);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        /* Responsive Improvements */
+        @media (max-width: 768px) {
+            .dashboard-container {
+                flex-direction: column;
+            }
+            
+            .dashboard-sidebar {
+                width: 100%;
+            }
+            
+            .quick-actions,
+            .recommended-services {
+                grid-template-columns: 1fr;
+            }
+            
+            .booking-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .booking-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .booking-actions {
+                width: 100%;
+                justify-content: stretch;
+            }
+            
+            .booking-actions .btn {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="home.html" class="logo">
+                <div class="logo-icon">W</div>
+                Work<span>Buddy</span>
+            </a>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="customer-dashboard.html" class="active">Dashboard</a></li>
+                    <li><a href="contact-us.html">Contact Us</a></li>
+                </ul>
+            </nav>
+            <div class="user-menu">
+                <div class="dropdown">
+                    <div class="user-profile">
+                        <div class="user-avatar">JS</div>
+                        <div class="user-name">John Smith</div>
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="customer-dashboard.html#account-section">My Profile</a>
+                        <a href="customer-dashboard.html#account-section">Settings</a>
+                        <a href="index.html">Logout</a>
+                    </div>
+                </div>
+                <select id="language-selector" onchange="setCurrentLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="mr">मराठी</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <section class="dashboard-hero">
+        <div class="container dashboard-hero-content">
+            <h1>Welcome Back, Customer!</h1>
+            <p>Manage your bookings and find professional services</p>
+        </div>
+    </section>
+
+    <main>
+        <div class="container">
+            <div class="dashboard-container">
+                <div class="dashboard-sidebar">
+                    <div class="user-profile-card">
+                        <div class="user-avatar-large">JD</div>
+                        <h3>John Doe</h3>
+                        <p>john.doe@example.com</p>
+                        <div class="user-stats">
+                            <div class="stat">
+                                <span class="stat-value">12</span>
+                                <span class="stat-label">Bookings</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value">4.8</span>
+                                <span class="stat-label">Rating</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <nav class="dashboard-nav">
+                        <ul>
+                            <li class="active"><a href="#overview">Overview</a></li>
+                            <li><a href="#bookings">My Bookings</a></li>
+                            <li><a href="#services">Browse Services</a></li>
+                            <li><a href="#payments">Payment History</a></li>
+                            <li><a href="#settings">Settings</a></li>
+                        </ul>
+                    </nav>
+                </div>
+                
+                <div class="dashboard-main">
+                    <div class="dashboard-section">
+                        <div class="section-header">
+                            <h2>Quick Actions</h2>
+                        </div>
+                        
+                        <div class="quick-actions">
+                            <div class="action-card" onclick="window.location.href='book-service.html'">
+                                <div class="action-icon" style="background-image: url('../images/subcategories/electrician.svg');"></div>
+                                <h3>Book a Service</h3>
+                                <p>Find and book professional services</p>
+                            </div>
+                            
+                            <div class="action-card" onclick="window.location.href='#'">
+                                <div class="action-icon" style="background-image: url('../images/subcategories/house-cleaning.svg');"></div>
+                                <h3>My Bookings</h3>
+                                <p>View and manage your bookings</p>
+                            </div>
+                            
+                            <div class="action-card" onclick="window.location.href='#'">
+                                <div class="action-icon" style="background-image: url('../images/subcategories/watchman.svg');"></div>
+                                <h3>Favorite Workers</h3>
+                                <p>Access your preferred professionals</p>
+                            </div>
+                            
+                            <div class="action-card" onclick="window.location.href='#'">
+                                <div class="action-icon" style="background-image: url('../images/subcategories/pest-control.svg');"></div>
+                                <h3>Support</h3>
+                                <p>Get help and support</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-section">
+                        <div class="section-header">
+                            <h2>Recent Bookings</h2>
+                            <a href="#" class="view-all">View All</a>
+                        </div>
+                        
+                        <div class="bookings-list">
+                            <div class="booking-card">
+                                <div class="booking-header">
+                                    <div class="booking-icon" style="background-image: url('../images/subcategories/electrician.svg');"></div>
+                                    <div class="booking-info">
+                                        <h3>Electrician Service</h3>
+                                        <p>John Smith • 4.9 ★</p>
+                                    </div>
+                                    <div class="booking-status confirmed">Confirmed</div>
+                                </div>
+                                <div class="booking-details">
+                                    <p><strong>Date:</strong> Oct 15, 2025</p>
+                                    <p><strong>Time:</strong> 10:00 AM - 12:00 PM</p>
+                                    <p><strong>Location:</strong> 123 Main St, Mumbai</p>
+                                    <p><strong>Amount:</strong> ₹1,500</p>
+                                    <p><strong>Payment:</strong> <span class="payment-status completed">Completed</span></p>
+                                </div>
+                                <div class="booking-actions">
+                                    <button class="btn btn-secondary btn-small">Reschedule</button>
+                                    <button class="btn btn-primary btn-small">Contact</button>
+                                </div>
+                            </div>
+                            
+                            <div class="booking-card">
+                                <div class="booking-header">
+                                    <div class="booking-icon" style="background-image: url('../images/subcategories/house-cleaning.svg');"></div>
+                                    <div class="booking-info">
+                                        <h3>House Cleaning</h3>
+                                        <p>Rajesh Kumar • 4.7 ★</p>
+                                    </div>
+                                    <div class="booking-status completed">Completed</div>
+                                </div>
+                                <div class="booking-details">
+                                    <p><strong>Date:</strong> Oct 10, 2025</p>
+                                    <p><strong>Time:</strong> 9:00 AM - 1:00 PM</p>
+                                    <p><strong>Location:</strong> 123 Main St, Mumbai</p>
+                                    <p><strong>Amount:</strong> ₹800</p>
+                                    <p><strong>Payment:</strong> <span class="payment-status completed">Completed</span></p>
+                                </div>
+                                <div class="booking-actions">
+                                    <button class="btn btn-secondary btn-small">View Details</button>
+                                    <button class="btn btn-primary btn-small">Rate Service</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Active Negotiations Section -->
+                    <div class="dashboard-section">
+                        <div class="section-header">
+                            <h2>Active Negotiations</h2>
+                        </div>
+                        
+                        <div class="bookings-list">
+                            <div class="booking-card">
+                                <div class="booking-header">
+                                    <div class="booking-icon" style="background-image: url('../images/subcategories/plumber.svg');"></div>
+                                    <div class="booking-info">
+                                        <h3>Plumber Service</h3>
+                                        <p>Ramesh Patel • 4.8 ★</p>
+                                    </div>
+                                    <div class="booking-status status-pending">Negotiation</div>
+                                </div>
+                                <div class="booking-details">
+                                    <p><strong>Proposed Price:</strong> ₹800</p>
+                                    <p><strong>Worker Offer:</strong> ₹750</p>
+                                    <p><strong>Last Updated:</strong> Today, 11:30 AM</p>
+                                </div>
+                                <div class="booking-actions">
+                                    <button class="btn btn-warning btn-small" onclick="openNegotiationModal('Plumber Service', 'Ramesh Patel', 800, 750)">Continue Negotiation</button>
+                                    <button class="btn btn-primary btn-small" onclick="acceptWorkerOffer(750)">Accept Offer</button>
+                                </div>
+                            </div>
+                            
+                            <div class="booking-card">
+                                <div class="booking-header">
+                                    <div class="booking-icon" style="background-image: url('../images/subcategories/carpenter.svg');"></div>
+                                    <div class="booking-info">
+                                        <h3>Carpenter Service</h3>
+                                        <p>Suresh Kumar • 4.6 ★</p>
+                                    </div>
+                                    <div class="booking-status status-pending">Waiting for Response</div>
+                                </div>
+                                <div class="booking-details">
+                                    <p><strong>Proposed Price:</strong> ₹1,200</p>
+                                    <p><strong>Worker Response:</strong> Awaiting</p>
+                                    <p><strong>Last Updated:</strong> Today, 9:15 AM</p>
+                                </div>
+                                <div class="booking-actions">
+                                    <button class="btn btn-warning btn-small" onclick="openNegotiationModal('Carpenter Service', 'Suresh Kumar', 1200, null)">View Details</button>
+                                    <button class="btn btn-danger btn-small" onclick="cancelNegotiation()">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-section">
+                        <div class="section-header">
+                            <h2>Recommended Services</h2>
+                        </div>
+                        
+                        <div class="recommended-services">
+                            <div class="service-card" onclick="window.location.href='book-service.html'">
+                                <div class="service-icon" style="background-image: url('../images/subcategories/plumber.svg');"></div>
+                                <h3>Plumber Services</h3>
+                                <p>Expert plumbing solutions for your home</p>
+                                <div class="service-rating">
+                                    <span>4.8 ★</span>
+                                    <span>(128 reviews)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="service-card" onclick="window.location.href='book-service.html'">
+                                <div class="service-icon" style="background-image: url('../images/subcategories/carpenter.svg');"></div>
+                                <h3>Carpenter Services</h3>
+                                <p>Furniture repair and woodworking</p>
+                                <div class="service-rating">
+                                    <span>4.7 ★</span>
+                                    <span>(96 reviews)</span>
+                                </div>
+                            </div>
+                            
+                            <div class="service-card" onclick="window.location.href='book-service.html'">
+                                <div class="service-icon" style="background-image: url('../images/subcategories/pest-control.svg');"></div>
+                                <h3>Pest Control</h3>
+                                <p>Effective pest elimination services</p>
+                                <div class="service-rating">
+                                    <span>4.9 ★</span>
+                                    <span>(87 reviews)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Negotiation Modal -->
+    <div id="negotiationModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Price Negotiation</h2>
+                <span class="close" onclick="closeNegotiationModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="negotiation-info">
+                    <h3>Service: <span id="negotiationServiceName"></span></h3>
+                    <p>Worker: <span id="negotiationWorkerName"></span></p>
+                    <p>Booking ID: <span id="negotiationBookingId"></span></p>
+                    <p>Your Offer: ₹<span id="customerOffer"></span></p>
+                    <p>Worker's Offer: ₹<span id="workerOffer"></span></p>
+                </div>
+                <div class="offer-input">
+                    <label for="newOffer">Your Counter Offer:</label>
+                    <input type="number" id="newOffer" placeholder="Enter your offer amount">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeNegotiationModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="submitCounterOffer()">Submit Offer</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>WorkBuddy</h3>
+                    <ul>
+                        <li><a href="home.html">Home</a></li>
+                        <li><a href="customer-dashboard.html">Dashboard</a></li>
+                        <li><a href="contact-us.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>For Workers</h3>
+                    <ul>
+                        <li><a href="worker-registration.html">Join as Worker</a></li>
+                        <li><a href="worker-login.html">Worker Login</a></li>
+                        <li><a href="worker-dashboard.html">Worker Dashboard</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>For Customers</h3>
+                    <ul>
+                        <li><a href="customer-registration.html">Join as Customer</a></li>
+                        <li><a href="customer-login.html">Customer Login</a></li>
+                        <li><a href="customer-registration.html">Book Service</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="contact-us.html">Help Center</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 WorkBuddy. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/workbuddy-common.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Modal functions
+        function openNegotiationModal(serviceName, workerName, customerOffer, workerOffer) {
+            document.getElementById('negotiationServiceName').textContent = serviceName;
+            document.getElementById('negotiationWorkerName').textContent = workerName;
+            document.getElementById('customerOffer').textContent = customerOffer;
+            document.getElementById('workerOffer').textContent = workerOffer || 'Awaiting';
+            document.getElementById('negotiationBookingId').textContent = 'BK' + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('negotiationModal').style.display = 'flex';
+        }
+        
+        function closeNegotiationModal() {
+            document.getElementById('negotiationModal').style.display = 'none';
+        }
+        
+        function submitCounterOffer() {
+            const newOffer = document.getElementById('newOffer').value;
+            if (newOffer && !isNaN(newOffer) && newOffer > 0) {
+                showNotification(`Counter offer of ₹${newOffer} submitted successfully!`, 'success');
+                closeNegotiationModal();
+                document.getElementById('newOffer').value = '';
+            } else {
+                showNotification('Please enter a valid offer amount', 'error');
+            }
+        }
+        
+        function acceptWorkerOffer(amount) {
+            showNotification(`Worker's offer of ₹${amount} accepted!`, 'success');
+        }
+        
+        function cancelNegotiation() {
+            showNotification('Negotiation cancelled', 'warning');
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('negotiationModal');
+            if (event.target === modal) {
+                closeNegotiationModal();
+            }
+        }
+    </script>
+</body>
+</html>

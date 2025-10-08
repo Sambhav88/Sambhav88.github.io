@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Login - WorkBuddy</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        :root {
+            --primary-color: #2e3338;
+            --secondary-color: #ff6c00;
+            --accent-color: #ff6c00;
+            --light-bg: #f8f8f8;
+            --dark-text: #2e3338;
+            --light-text: #6f7275;
+            --white: #ffffff;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--white);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        .logo-icon {
+            margin-right: 10px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu li {
+            margin-left: 1.5rem;
+        }
+
+        .nav-menu li a {
+            color: var(--dark-text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            position: relative;
+        }
+
+        .nav-menu li a:hover {
+            color: var(--accent-color);
+            background-color: rgba(255, 108, 0, 0.1);
+        }
+
+        .nav-menu li a.active {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .nav-menu li a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: var(--dark-text);
+            border: 2px solid var(--dark-text);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            background-color: var(--dark-text);
+            color: var(--white);
+        }
+
+        .btn-signup {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: var(--white);
+            border: 2px solid var(--accent-color);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(255, 108, 0, 0.3);
+        }
+
+        .btn-signup:hover {
+            background: linear-gradient(135deg, #e06100, #c25500);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 108, 0, 0.4);
+        }
+
+        #language-selector {
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            border: 1px solid #ddd;
+            background-color: var(--white);
+            font-size: 0.9rem;
+            margin-left: 1rem;
+        }
+
+        /* Mobile menu styles */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--dark-text);
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+
+        /* Login Section */
+        .login-hero {
+            background: linear-gradient(rgba(46, 51, 56, 0.85), rgba(46, 51, 56, 0.9)), url('../images/hero-bg.svg');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(46, 51, 56, 0.85), rgba(46, 51, 56, 0.9));
+            z-index: 1;
+        }
+
+        .login-hero-content {
+            max-width: 650px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .login-hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-hero p {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            max-width: 600px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-container {
+            max-width: 500px;
+            margin: -80px auto 3rem;
+            padding: 2rem;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            border-top: 5px solid var(--accent-color);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-header h2 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .form-header p {
+            color: var(--light-text);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: #fff;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 108, 0, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: var(--white);
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(255, 108, 0, 0.3);
+            border: 2px solid var(--accent-color);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #e06100, #c25500);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 108, 0, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--light-text);
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+            background-color: #f8f9fa;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            margin: 2rem -2rem -2rem;
+        }
+
+        .form-footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 0.5rem;
+        }
+
+        .login-option {
+            flex: 1;
+            text-align: center;
+            padding: 0.8rem;
+            border-radius: calc(var(--border-radius) - 2px);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+
+        .login-option.active {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: var(--white);
+            box-shadow: 0 2px 5px rgba(255, 108, 0, 0.3);
+        }
+
+        .otp-section {
+            display: none;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .otp-input {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .otp-input input {
+            width: 45px;
+            height: 45px;
+            text-align: center;
+            font-size: 1.2rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .otp-input input:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            transform: scale(1.05);
+        }
+
+        .resend-otp {
+            margin-top: 1rem;
+            color: var(--accent-color);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .resend-otp:hover {
+            text-decoration: underline;
+        }
+
+        .switch-login {
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--light-text);
+        }
+
+        .switch-login a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .switch-login a:hover {
+            text-decoration: underline;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 1rem;
+        }
+
+        .forgot-password a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background-color: var(--white);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: var(--shadow);
+                padding: 2rem 0;
+                z-index: 999;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                margin: 1rem 0;
+            }
+
+            .auth-buttons {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .header-container {
+                position: relative;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                padding: 10px 0;
+            }
+
+            .logo {
+                margin-bottom: 1rem;
+            }
+
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 0.3rem 0.5rem;
+            }
+
+            .login-hero {
+                height: 250px;
+            }
+
+            .login-hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .login-container {
+                margin: -60px auto 2rem;
+                padding: 1.5rem;
+            }
+
+            .form-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .login-options {
+                flex-direction: column;
+            }
+
+            .login-option {
+                margin: 0.25rem 0;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-hero {
+                height: 200px;
+            }
+
+            .login-hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .login-hero p {
+                font-size: 1rem;
+            }
+            
+            .otp-input input {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="home.html" class="logo">
+                <div class="logo-icon">W</div>
+                Work<span>Buddy</span>
+            </a>
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="home.html#features">How It Works</a></li>
+                    <li><a href="home.html#about">About</a></li>
+                    <li><a href="contact-us.html">Contact Us</a></li>
+                    <li>
+                        <select id="language-selector" onchange="setCurrentLanguage(this.value)">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी</option>
+                            <option value="mr">मराठी</option>
+                        </select>
+                    </li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button class="btn-login" onclick="window.location.href='customer-login.html'">Login</button>
+                <button class="btn-signup" onclick="window.location.href='customer-registration.html'">Sign Up</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="login-hero">
+        <div class="container login-hero-content">
+            <h1>Customer Login</h1>
+            <p>Access your account to book services and manage your bookings</p>
+        </div>
+    </section>
+
+    <section class="login-form-section">
+        <div class="container">
+            <div class="login-container">
+                <div class="form-header">
+                    <h2>Welcome Back</h2>
+                    <p>Login to your WorkBuddy account</p>
+                </div>
+                
+                <div class="login-options">
+                    <div class="login-option active" data-login-type="credentials">
+                        Email/Password
+                    </div>
+                    <div class="login-option" data-login-type="otp">
+                        OTP Login
+                    </div>
+                </div>
+                
+                <form id="loginForm">
+                    <!-- Credentials Login -->
+                    <div class="form-section active" id="credentials-section">
+                        <div class="form-group">
+                            <label for="loginEmail">Email Address</label>
+                            <input type="email" id="loginEmail" name="email" placeholder="Enter your email address" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+                        </div>
+                        
+                        <div class="forgot-password">
+                            <a href="#">Forgot Password?</a>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">Login</button>
+                    </div>
+                    
+                    <!-- OTP Login -->
+                    <div class="form-section" id="otp-section">
+                        <div class="form-group">
+                            <label for="otpIdentifier">Email or Phone Number</label>
+                            <input type="text" id="otpIdentifier" name="identifier" placeholder="Enter your email or phone number" required>
+                        </div>
+                        
+                        <div class="otp-section" id="otpInputSection">
+                            <p>Enter the 6-digit OTP sent to your email/phone</p>
+                            <div class="otp-input">
+                                <input type="text" maxlength="1" id="otp1" data-index="1">
+                                <input type="text" maxlength="1" id="otp2" data-index="2">
+                                <input type="text" maxlength="1" id="otp3" data-index="3">
+                                <input type="text" maxlength="1" id="otp4" data-index="4">
+                                <input type="text" maxlength="1" id="otp5" data-index="5">
+                                <input type="text" maxlength="1" id="otp6" data-index="6">
+                            </div>
+                            <p class="resend-otp">Resend OTP</p>
+                        </div>
+                        
+                        <button type="button" class="submit-btn" id="requestOtpBtn">Request OTP</button>
+                        <button type="button" class="submit-btn" id="verifyOtpBtn" style="display: none;">Verify OTP & Login</button>
+                    </div>
+                </form>
+                
+                <div class="form-footer">
+                    <p>By logging in, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 WorkBuddy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/translations.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navMenu = document.getElementById('nav-menu');
+            
+            if (mobileMenu && navMenu) {
+                mobileMenu.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+                
+                // Close mobile menu when clicking on a link
+                document.querySelectorAll('.nav-menu li a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        mobileMenu.classList.remove('active');
+                        navMenu.classList.remove('active');
+                    });
+                });
+            }
+            
+            // Login option switching
+            document.querySelectorAll('.login-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove active class from all options
+                    document.querySelectorAll('.login-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked option
+                    this.classList.add('active');
+                    
+                    // Get login type
+                    const loginType = this.getAttribute('data-login-type');
+                    
+                    // Show appropriate section
+                    if (loginType === 'credentials') {
+                        document.getElementById('credentials-section').classList.add('active');
+                        document.getElementById('otp-section').classList.remove('active');
+                    } else {
+                        document.getElementById('credentials-section').classList.remove('active');
+                        document.getElementById('otp-section').classList.add('active');
+                    }
+                });
+            });
+            
+            // OTP input handling
+            const otpInputs = document.querySelectorAll('.otp-input input');
+            otpInputs.forEach((input, index) => {
+                // Handle input
+                input.addEventListener('input', function() {
+                    if (this.value.length === 1 && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].focus();
+                    }
+                });
+                
+                // Handle backspace
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                        otpInputs[index - 1].focus();
+                    }
+                });
+                
+                // Handle paste
+                input.addEventListener('paste', function(e) {
+                    e.preventDefault();
+                    const paste = (e.clipboardData || window.clipboardData).getData('text');
+                    const pasteArray = paste.replace(/\D/g, '').split('').slice(0, 6);
+                    
+                    pasteArray.forEach((char, i) => {
+                        if (otpInputs[i]) {
+                            otpInputs[i].value = char;
+                            if (i < 5) otpInputs[i + 1].focus();
+                        }
+                    });
+                });
+            });
+            
+            // Request OTP button
+            document.getElementById('requestOtpBtn').addEventListener('click', async function() {
+                const identifier = document.getElementById('otpIdentifier').value.trim();
+                
+                if (!identifier) {
+                    alert('Please enter your email or phone number');
+                    return;
+                }
+                
+                // Simple validation
+                const isEmail = identifier.includes('@');
+                const isPhone = /^\d{10,15}$/.test(identifier);
+                
+                if (!isEmail && !isPhone) {
+                    alert('Please enter a valid email address or phone number');
+                    return;
+                }
+                
+                try {
+                    // Show loading state
+                    const btn = this;
+                    const originalText = btn.textContent;
+                    btn.textContent = 'Sending OTP...';
+                    btn.disabled = true;
+                    
+                    // In a real implementation, you would call an API to send OTP
+                    // For now, we'll simulate the OTP sending
+                    console.log('Sending OTP to:', identifier);
+                    
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // Show OTP input section
+                    document.getElementById('otpInputSection').style.display = 'block';
+                    document.getElementById('requestOtpBtn').style.display = 'none';
+                    document.getElementById('verifyOtpBtn').style.display = 'block';
+                    
+                    // Reset button
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                    
+                    alert('OTP has been sent to your email/phone. Please check and enter it below.');
+                    
+                    // Focus on first OTP input
+                    document.getElementById('otp1').focus();
+                } catch (error) {
+                    console.error('Error sending OTP:', error);
+                    alert('Error sending OTP. Please try again.');
+                    
+                    // Reset button
+                    const btn = this;
+                    btn.textContent = 'Request OTP';
+                    btn.disabled = false;
+                }
+            });
+            
+            // Resend OTP
+            document.querySelector('.resend-otp').addEventListener('click', async function() {
+                const identifier = document.getElementById('otpIdentifier').value.trim();
+                
+                if (!identifier) {
+                    alert('Please enter your email or phone number first');
+                    return;
+                }
+                
+                try {
+                    // Show loading state
+                    const element = this;
+                    const originalText = element.textContent;
+                    element.textContent = 'Resending...';
+                    
+                    // Simulate API delay
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // In a real implementation, you would call an API to resend OTP
+                    alert('OTP has been resent to your email/phone.');
+                    
+                    // Reset text
+                    element.textContent = originalText;
+                    
+                    // Clear OTP inputs
+                    otpInputs.forEach(input => input.value = '');
+                    
+                    // Focus on first OTP input
+                    document.getElementById('otp1').focus();
+                } catch (error) {
+                    console.error('Error resending OTP:', error);
+                    alert('Error resending OTP. Please try again.');
+                    this.textContent = 'Resend OTP';
+                }
+            });
+        });
+
+        // Form submission for credentials login
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Check which login method is active
+            const activeLoginOption = document.querySelector('.login-option.active');
+            const loginType = activeLoginOption.getAttribute('data-login-type');
+            
+            if (loginType === 'credentials') {
+                // Credentials login
+                const email = document.getElementById('loginEmail').value.trim();
+                const password = document.getElementById('loginPassword').value;
+                
+                if (!email || !password) {
+                    alert('Please enter both email and password');
+                    return;
+                }
+                
+                try {
+                    // Show loading state
+                    const btn = document.querySelector('#credentials-section .submit-btn');
+                    const originalText = btn.textContent;
+                    btn.textContent = 'Logging in...';
+                    btn.disabled = true;
+                    
+                    // Login user via API
+                    const credentials = { email, password };
+                    const result = await window.WorkBuddyAPI.loginUser(credentials);
+                    console.log('User logged in:', result);
+                    
+                    // Store user data in localStorage/sessionStorage
+                    localStorage.setItem('user', JSON.stringify(result));
+                    
+                    // Reset button
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                    
+                    // Show success message
+                    alert('Login successful!');
+                    
+                    // Redirect to customer dashboard
+                    window.location.href = 'customer-dashboard.html';
+                } catch (error) {
+                    console.error('Error logging in user:', error);
+                    
+                    // Reset button
+                    const btn = document.querySelector('#credentials-section .submit-btn');
+                    btn.textContent = 'Login';
+                    btn.disabled = false;
+                    
+                    alert('Invalid email or password. Please try again.');
+                }
+            }
+        });
+        
+        // Verify OTP button
+        document.getElementById('verifyOtpBtn').addEventListener('click', async function() {
+            const identifier = document.getElementById('otpIdentifier').value.trim();
+            
+            // Get OTP values
+            let otp = '';
+            for (let i = 1; i <= 6; i++) {
+                otp += document.getElementById('otp' + i).value;
+            }
+            
+            if (otp.length !== 6 || !/^\d{6}$/.test(otp)) {
+                alert('Please enter a valid 6-digit OTP');
+                return;
+            }
+            
+            try {
+                // Show loading state
+                const btn = this;
+                const originalText = btn.textContent;
+                btn.textContent = 'Verifying...';
+                btn.disabled = true;
+                
+                // In a real implementation, you would call an API to verify OTP
+                // For now, we'll simulate the OTP verification
+                console.log('Verifying OTP:', otp, 'for:', identifier);
+                
+                // Simulate API delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Simulate successful verification
+                // In a real app, you would check the API response
+                alert('OTP verified successfully!');
+                
+                // For demo purposes, redirect to dashboard
+                // In a real app, you would get user data from the API response
+                const userData = {
+                    id: 1,
+                    name: "Demo User",
+                    email: identifier.includes('@') ? identifier : null,
+                    phone: identifier.includes('@') ? null : identifier
+                };
+                
+                // Store user data
+                localStorage.setItem('user', JSON.stringify(userData));
+                
+                // Reset button
+                btn.textContent = originalText;
+                btn.disabled = false;
+                
+                // Redirect to customer dashboard
+                window.location.href = 'customer-dashboard.html';
+            } catch (error) {
+                console.error('Error verifying OTP:', error);
+                
+                // Reset button
+                const btn = this;
+                btn.textContent = 'Verify OTP & Login';
+                btn.disabled = false;
+                
+                alert('Invalid OTP. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

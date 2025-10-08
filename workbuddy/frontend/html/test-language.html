@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Language - WorkBuddy</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .test-section {
+            margin-bottom: 2rem;
+        }
+        
+        .test-section h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .result {
+            padding: 1rem;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 data-translate="workbuddy">WorkBuddy</h1>
+            <nav>
+                <ul>
+                    <li><a href="home.html" data-translate="home">Home</a></li>
+                    <li>
+                        <select id="language-selector" onchange="setCurrentLanguage(this.value)">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी</option>
+                            <option value="mr">मराठी</option>
+                        </select>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="test-container">
+            <h2>Language Test Page</h2>
+            
+            <div class="test-section">
+                <h3>Current Language</h3>
+                <div class="result">
+                    <p>Current Language Code: <span id="current-lang">en</span></p>
+                </div>
+            </div>
+            
+            <div class="test-section">
+                <h3>Translated Content</h3>
+                <div class="result">
+                    <p data-translate="heroTitle">Connecting Skilled Workers with Customers</p>
+                    <p data-translate="heroDescription">Find reliable plumbers, electricians, painters, and other blue-collar workers in your area.</p>
+                </div>
+            </div>
+            
+            <div class="test-section">
+                <h3>Language Change Test</h3>
+                <p>Select a language from the dropdown in the header to see the content change.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p data-translate="footer">&copy; 2025 WorkBuddy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/translations.js"></script>
+    <script>
+        // Display current language
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentLang = getCurrentLanguage();
+            document.getElementById('current-lang').textContent = currentLang;
+            document.getElementById('language-selector').value = currentLang;
+        });
+    </script>
+</body>
+</html>

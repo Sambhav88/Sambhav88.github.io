@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book a Service - WorkBuddy</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        :root {
+            --primary-color: #2e3338;
+            --secondary-color: #ff6c00;
+            --accent-color: #ff6c00;
+            --light-bg: #f8f8f8;
+            --dark-text: #2e3338;
+            --light-text: #6f7275;
+            --white: #ffffff;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --border-radius: 8px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--white);
+            color: var(--dark-text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo span {
+            color: var(--accent-color);
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            align-items: center;
+        }
+        
+        .nav-menu li {
+            margin-left: 1.5rem;
+        }
+        
+        .nav-menu li a {
+            color: var(--dark-text);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            position: relative;
+        }
+        
+        .nav-menu li a:hover {
+            color: var(--accent-color);
+            background-color: rgba(255, 108, 0, 0.1);
+        }
+        
+        .nav-menu li a.active {
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+        
+        .nav-menu li a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: var(--accent-color);
+            border-radius: 3px;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .btn-login {
+            background: transparent;
+            color: var(--dark-text);
+            border: 2px solid var(--dark-text);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-login:hover {
+            background-color: var(--dark-text);
+            color: var(--white);
+        }
+        
+        .btn-signup {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: var(--white);
+            border: 2px solid var(--accent-color);
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(255, 108, 0, 0.3);
+        }
+        
+        .btn-signup:hover {
+            background: linear-gradient(135deg, #e06100, #c25500);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 108, 0, 0.4);
+        }
+        
+        #language-selector {
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            border: 1px solid #ddd;
+            background-color: var(--white);
+            font-size: 0.9rem;
+            margin-left: 1rem;
+        }
+        
+        .booking-hero {
+            background: linear-gradient(rgba(46, 51, 56, 0.85), rgba(46, 51, 56, 0.9)), url('../images/hero-bg.svg');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            color: var(--white);
+            position: relative;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .booking-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(46, 51, 56, 0.85), rgba(46, 51, 56, 0.9));
+            z-index: 1;
+        }
+        
+        .booking-hero-content {
+            max-width: 650px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .booking-hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .booking-hero p {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            max-width: 600px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .booking-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .service-categories {
+            flex: 1;
+            min-width: 300px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #eee;
+            border-top: 5px solid var(--accent-color);
+        }
+        
+        .booking-form {
+            flex: 2;
+            min-width: 300px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #eee;
+            border-top: 5px solid var(--accent-color);
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .form-header h2 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .form-header p {
+            color: var(--light-text);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-text);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s;
+            background-color: #fff;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(255, 108, 0, 0.1);
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #aaa;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: var(--white);
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(255, 108, 0, 0.3);
+            border: 2px solid var(--accent-color);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #e06100, #c25500);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 108, 0, 0.4);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .submit-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .selected-service {
+            background: linear-gradient(to right, #f8f9fa, #fff);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .selected-service::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: var(--accent-color);
+        }
+        
+        .selected-service h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+        
+        .worker-list {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .worker-list h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.4rem;
+        }
+        
+        .worker-card {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(to right, #f8f9fa, #fff);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .worker-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #ddd;
+        }
+        
+        .worker-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent-color);
+        }
+        
+        .worker-card:hover::before {
+            background: var(--accent-color);
+        }
+        
+        .worker-card.selected {
+            border-color: var(--accent-color);
+            background: linear-gradient(to right, #fff8f7, #fff);
+        }
+        
+        .worker-card.selected::before {
+            background: var(--accent-color);
+        }
+        
+        .worker-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            box-shadow: 0 3px 10px rgba(255, 108, 0, 0.2);
+        }
+        
+        .worker-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+        
+        .worker-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+        
+        .rating {
+            color: #f39c12;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+        
+        .category {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .category:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .category h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .category-icon {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        .subcategory {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: #f8f9fa;
+            display: flex;
+            align-items: center;
+            border: 1px solid #eee;
+        }
+        
+        .subcategory:hover {
+            background-color: #e9ecef;
+            transform: translateX(5px);
+        }
+        
+        .subcategory.selected {
+            background: linear-gradient(to right, #fff8f7, #fff);
+            border-color: var(--accent-color);
+            font-weight: 600;
+        }
+        
+        .subcategory-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        
+        .service-badge {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: #fff;
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-left: 0.5rem;
+            font-weight: bold;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+        
+        .modal-content {
+            background-color: var(--white);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: var(--border-radius);
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), #1a1f23);
+            color: white;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .close {
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .close:hover {
+            color: var(--accent-color);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .negotiation-info {
+            background: linear-gradient(to right, #f8f9fa, #fff);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            border: 1px solid #eee;
+        }
+        
+        .negotiation-info h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        .price-negotiation {
+            margin-top: 1rem;
+        }
+        
+        .price-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+        
+        .price-input label {
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 0;
+        }
+        
+        .price-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+        }
+        
+        .price-input button {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .price-input button:hover {
+            background: linear-gradient(135deg, #e06100, #c25500);
+        }
+        
+        .chat-container {
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+        
+        .chat-messages {
+            height: 250px;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: #f8f9fa;
+        }
+        
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+        }
+        
+        .message.customer {
+            justify-content: flex-end;
+        }
+        
+        .message.worker {
+            justify-content: flex-start;
+        }
+        
+        .message.system {
+            justify-content: center;
+        }
+        
+        .message-bubble {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 18px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .customer-bubble {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .worker-bubble {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .system-bubble {
+            background: #e9ecef;
+            color: var(--dark-text);
+            text-align: center;
+            font-size: 0.9rem;
+            max-width: 100%;
+        }
+        
+        .message-info {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            opacity: 0.8;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 1rem;
+            background-color: white;
+            border-top: 1px solid #ddd;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            border-right: none;
+        }
+        
+        .chat-input button {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .chat-input button:hover {
+            background: linear-gradient(135deg, #e06100, #c25500);
+        }
+        
+        .negotiation-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+        
+        .btn-primary, .btn-secondary {
+            padding: 12px 24px;
+            border-radius: var(--border-radius);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-color), #e06100);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #e06100, #c25500);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #7f8c8d, #6c7a7b);
+            transform: translateY(-2px);
+        }
+        
+        /* Mobile menu styles */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+        }
+        
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--dark-text);
+            border-radius: 3px;
+            transition: all 0.3s;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background-color: var(--white);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: var(--shadow);
+                padding: 2rem 0;
+                z-index: 999;
+            }
+            
+            .nav-menu.active {
+                left: 0;
+            }
+            
+            .nav-menu li {
+                margin: 1rem 0;
+            }
+            
+            .auth-buttons {
+                display: none;
+            }
+            
+            .menu-toggle {
+                display: flex;
+            }
+            
+            .header-container {
+                position: relative;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                padding: 10px 0;
+            }
+            
+            .logo {
+                margin-bottom: 1rem;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.3rem 0.5rem;
+            }
+            
+            .booking-hero {
+                height: 250px;
+            }
+            
+            .booking-hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .booking-container {
+                flex-direction: column;
+            }
+            
+            .category h4 {
+                font-size: 1.1rem;
+            }
+            
+            .subcategory {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            .price-input {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .price-input button {
+                margin-top: 0.5rem;
+            }
+            
+            .negotiation-actions {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .booking-hero {
+                height: 200px;
+            }
+            
+            .booking-hero h1 {
+                font-size: 1.5rem;
+            }
+            
+            .booking-hero p {
+                font-size: 1rem;
+            }
+            
+            .booking-form, .service-categories {
+                padding: 1.5rem;
+            }
+            
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <a href="home.html" class="logo">
+                <div class="logo-icon">W</div>
+                Work<span>Buddy</span>
+            </a>
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <nav>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="home.html#features">How It Works</a></li>
+                    <li><a href="home.html#about">About</a></li>
+                    <li><a href="contact-us.html">Contact Us</a></li>
+                    <li>
+                        <select id="language-selector" onchange="setCurrentLanguage(this.value)">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी</option>
+                            <option value="mr">मराठी</option>
+                        </select>
+                    </li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button class="btn-login" onclick="window.location.href='customer-login.html'">Login</button>
+                <button class="btn-signup" onclick="window.location.href='customer-registration.html'">Sign Up</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="booking-hero">
+        <div class="container booking-hero-content">
+            <h1>Book Professional Services</h1>
+            <p>Find skilled workers for all your home and society needs</p>
+        </div>
+    </section>
+
+    <main>
+        <div class="container">
+            <div class="booking-container">
+                <div class="service-categories">
+                    <h3>Service Categories</h3>
+                    <div class="category">
+                        <h4>
+                            <div class="category-icon" style="background-image: url('../images/home-cleaning.svg');"></div>
+                            Home Cleaning & Care
+                        </h4>
+                        <ul>
+                            <li class="subcategory" data-service="House Cleaning">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/house-cleaning.svg');"></div>
+                                House Cleaning
+                            </li>
+                            <li class="subcategory" data-service="Tank Cleaning">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/tank-cleaning.svg');"></div>
+                                Tank Cleaning
+                            </li>
+                            <li class="subcategory" data-service="Caretaker / House Help">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/caretaker.svg');"></div>
+                                Caretaker / House Help
+                            </li>
+                            <li class="subcategory" data-service="Maid (Daily / Part-Time)">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/maid-daily.svg');"></div>
+                                Maid (Daily / Part-Time)
+                            </li>
+                            <li class="subcategory" data-service="Maid (Monthly / Contract Basis)">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/maid-monthly.svg');"></div>
+                                Maid (Monthly / Contract Basis) <span class="service-badge">Popular</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="category">
+                        <h4>
+                            <div class="category-icon" style="background-image: url('../images/repairs-maintenance.svg');"></div>
+                            Repairs & Maintenance
+                        </h4>
+                        <ul>
+                            <li class="subcategory" data-service="Electrician">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/electrician.svg');"></div>
+                                Electrician (light, fan, wiring, drilling small holes)
+                            </li>
+                            <li class="subcategory" data-service="Plumber">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/plumber.svg');"></div>
+                                Plumber (leakage, taps, pipes, bathroom fittings)
+                            </li>
+                            <li class="subcategory" data-service="Carpenter">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/carpenter.svg');"></div>
+                                Carpenter (furniture, shelves, doors)
+                            </li>
+                            <li class="subcategory" data-service="Small Fixes">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/small-fixes.svg');"></div>
+                                Small Fixes / Minor Tasks <span class="service-badge">Quick</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="category">
+                        <h4>
+                            <div class="category-icon" style="background-image: url('../images/society-services.svg');"></div>
+                            Society & Daily Services
+                        </h4>
+                        <ul>
+                            <li class="subcategory" data-service="Watchman">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/watchman.svg');"></div>
+                                Watchman / Security Guard
+                            </li>
+                            <li class="subcategory" data-service="Lift Maintenance">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/lift-maintenance.svg');"></div>
+                                Lift / Elevator Maintenance
+                            </li>
+                            <li class="subcategory" data-service="Garden Cleaning">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/garden-cleaning.svg');"></div>
+                                Garden & Common Area Cleaning
+                            </li>
+                            <li class="subcategory" data-service="Society Helper">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/society-helper.svg');"></div>
+                                Light On/Off (Society Helper)
+                            </li>
+                            <li class="subcategory" data-service="Daily Care">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/daily-care.svg');"></div>
+                                Daily Care Services
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="category">
+                        <h4>
+                            <div class="category-icon" style="background-image: url('../images/miscellaneous.svg');"></div>
+                            Miscellaneous Services
+                        </h4>
+                        <ul>
+                            <li class="subcategory" data-service="Pest Control">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/pest-control.svg');"></div>
+                                Pest Control
+                            </li>
+                            <li class="subcategory" data-service="Appliance Repair">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/appliance-repair.svg');"></div>
+                                Appliance Repair (Fridge, AC, Washing Machine)
+                            </li>
+                            <li class="subcategory" data-service="Painting">
+                                <div class="subcategory-icon" style="background-image: url('../images/subcategories/painting.svg');"></div>
+                                Painting & Whitewashing
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="booking-form">
+                    <div class="form-header">
+                        <h2>Book Your Service</h2>
+                        <p>Fill in the details below to schedule your service</p>
+                    </div>
+                    
+                    <div class="selected-service">
+                        <h3>Selected Service: <span id="selectedServiceName">None</span></h3>
+                        <p id="selectedServiceDescription">Please select a service from the left panel</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="location">Service Location *</label>
+                        <input type="text" id="location" name="location" placeholder="Enter your full address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date">Preferred Date *</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="time">Preferred Time *</label>
+                        <select id="time" name="time" required>
+                            <option value="">Select time slot</option>
+                            <option value="morning">Morning (9:00 AM - 12:00 PM)</option>
+                            <option value="afternoon">Afternoon (12:00 PM - 4:00 PM)</option>
+                            <option value="evening">Evening (4:00 PM - 8:00 PM)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Additional Details</label>
+                        <textarea id="description" name="description" placeholder="Any specific requirements or details..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="estimatedPrice">Estimated Price (₹)</label>
+                        <input type="number" id="estimatedPrice" name="estimatedPrice" placeholder="Enter estimated price" min="0">
+                    </div>
+                    
+                    <div class="worker-list">
+                        <h3>Available Workers</h3>
+                        <div id="workersContainer">
+                            <p style="text-align: center; color: var(--light-text);">Select a service to see available workers</p>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="bookButton" disabled>Request Service</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Negotiation Modal -->
+        <div id="negotiationModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Price Negotiation</h2>
+                    <span class="close" onclick="closeNegotiationModal()">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="negotiation-info">
+                        <h3>Service: <span id="negotiationService"></span></h3>
+                        <p>Selected Worker: <span id="negotiationWorker"></span></p>
+                    </div>
+                    
+                    <div class="price-negotiation">
+                        <div class="price-input">
+                            <label for="customerPrice">Your Proposed Price (₹):</label>
+                            <input type="number" id="customerPrice" placeholder="Enter your price" min="0">
+                            <button onclick="sendPriceProposal()">Send Proposal</button>
+                        </div>
+                        
+                        <div class="chat-container">
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="message system-message">
+                                    <div class="message-bubble system-bubble">
+                                        Please propose your price for this service. The worker will review your proposal and respond.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-input">
+                                <input type="text" id="customerMessageInput" placeholder="Type your message...">
+                                <button onclick="sendCustomerMessage()">Send</button>
+                            </div>
+                        </div>
+                        
+                        <div class="negotiation-actions">
+                            <button class="btn-secondary" onclick="closeNegotiationModal()">Cancel</button>
+                            <button class="btn-primary" id="confirmBookingButton" disabled onclick="confirmBooking()">Confirm Booking</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 WorkBuddy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+    <script src="../js/api.js"></script>
+    <script>
+        // Set minimum date to today
+        document.getElementById('date').min = new Date().toISOString().split('T')[0];
+        
+        // Store selected service and worker
+        let selectedService = null;
+        let selectedWorker = null;
+        let currentBookingData = null;
+        let currentBookingId = null;
+        
+        // Service selection
+        document.querySelectorAll('.subcategory').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove selected class from all subcategories
+                document.querySelectorAll('.subcategory').forEach(sub => {
+                    sub.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked subcategory
+                this.classList.add('selected');
+                
+                const serviceName = this.getAttribute('data-service');
+                selectedService = serviceName;
+                document.getElementById('selectedServiceName').textContent = serviceName;
+                document.getElementById('selectedServiceDescription').textContent = 
+                    `You have selected ${serviceName}. Please provide your details to book this service.`;
+                
+                // Enable book button
+                document.getElementById('bookButton').disabled = false;
+                
+                // Load available workers for this service
+                loadAvailableWorkers(serviceName);
+            });
+        });
+        
+        // Load available workers from API
+        async function loadAvailableWorkers(service) {
+            const workersContainer = document.getElementById('workersContainer');
+            workersContainer.innerHTML = '<p style="text-align: center; color: var(--light-text);">Loading available workers...</p>';
+            
+            try {
+                // Fetch workers by service from API
+                const workers = await window.WorkBuddyAPI.getWorkersByService(service);
+                displayWorkers(workers);
+            } catch (error) {
+                console.error('Error loading workers:', error);
+                // Fallback to sample data if API fails
+                const sampleWorkers = [
+                    { id: 1, name: "Rajesh Kumar", skill: service, rating: 4.8, experience: "8 years", available: true },
+                    { id: 2, name: "Mohammed Ali", skill: service, rating: 4.6, experience: "5 years", available: true },
+                    { id: 3, name: "Suresh Patel", skill: service, rating: 4.9, experience: "12 years", available: true },
+                    { id: 4, name: "Amit Sharma", skill: service, rating: 4.7, experience: "6 years", available: false }
+                ];
+                displayWorkers(sampleWorkers);
+            }
+        }
+        
+        // Display workers in the UI
+        function displayWorkers(workers) {
+            const workersContainer = document.getElementById('workersContainer');
+            workersContainer.innerHTML = '';
+            
+            const availableWorkers = workers.filter(worker => worker.available);
+            
+            if (availableWorkers.length === 0) {
+                workersContainer.innerHTML = '<p style="text-align: center; color: var(--light-text);">No workers available for this service at the moment.</p>';
+                return;
+            }
+            
+            availableWorkers.forEach(worker => {
+                const workerCard = document.createElement('div');
+                workerCard.className = 'worker-card';
+                workerCard.innerHTML = `
+                    <div class="worker-avatar">${worker.name.charAt(0)}</div>
+                    <div class="worker-info">
+                        <h4>${worker.name}</h4>
+                        <p>${worker.skill} | ${worker.experience}</p>
+                        <div class="rating">★ ${worker.rating} (128 reviews)</div>
+                    </div>
+                `;
+                
+                workerCard.addEventListener('click', function() {
+                    // Remove selected class from all workers
+                    document.querySelectorAll('.worker-card').forEach(card => {
+                        card.classList.remove('selected');
+                    });
+                    
+                    // Add selected class to clicked worker
+                    this.classList.add('selected');
+                    
+                    // Store selected worker
+                    selectedWorker = worker;
+                });
+                
+                workersContainer.appendChild(workerCard);
+            });
+        }
+        
+        // Form submission
+        document.querySelector('.booking-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Validate form
+            if (!selectedService) {
+                alert('Please select a service first.');
+                return;
+            }
+            
+            if (!selectedWorker) {
+                alert('Please select a worker.');
+                return;
+            }
+            
+            // Get form data
+            const location = document.getElementById('location').value;
+            const date = document.getElementById('date').value;
+            const time = document.getElementById('time').value;
+            const description = document.getElementById('description').value;
+            const estimatedPrice = document.getElementById('estimatedPrice').value;
+            
+            if (!location || !date || !time) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Store booking data
+            currentBookingData = {
+                service: selectedService,
+                worker: selectedWorker,
+                location: location,
+                date: date,
+                time: time,
+                description: description,
+                estimatedPrice: estimatedPrice
+            };
+            
+            // Create initial booking via API
+            try {
+                const bookingData = {
+                    service: selectedService,
+                    workerId: selectedWorker.id,
+                    customerId: 1, // This would come from the authenticated user
+                    location: location,
+                    date: date,
+                    time: time,
+                    description: description,
+                    estimatedPrice: estimatedPrice || 0
+                };
+                
+                const booking = await window.WorkBuddyAPI.createBooking(bookingData);
+                currentBookingId = booking.id;
+                
+                // Open negotiation modal
+                openNegotiationModal();
+            } catch (error) {
+                console.error('Error creating booking:', error);
+                alert('Error creating booking. Please try again.');
+            }
+        });
+        
+        // Open negotiation modal
+        function openNegotiationModal() {
+            document.getElementById('negotiationService').textContent = currentBookingData.service;
+            document.getElementById('negotiationWorker').textContent = currentBookingData.worker.name;
+            document.getElementById('negotiationModal').style.display = 'block';
+            
+            // Load chat messages
+            loadChatMessages(currentBookingId);
+            
+            // Add initial system message
+            addSystemMessage("Please propose your price for this service. The worker will review your proposal and respond.");
+        }
+        
+        // Load chat messages
+        async function loadChatMessages(bookingId) {
+            try {
+                const messages = await window.WorkBuddyAPI.getMessages(bookingId);
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.innerHTML = '';
+                
+                messages.forEach(message => {
+                    if (message.senderType === 'SYSTEM') {
+                        addSystemMessage(message.content);
+                    } else if (message.senderType === 'CUSTOMER') {
+                        addCustomerMessage(message.content);
+                    } else if (message.senderType === 'WORKER') {
+                        addWorkerMessage(message.content);
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading messages:', error);
+                addSystemMessage("Error loading chat history.");
+            }
+        }
+        
+        // Close negotiation modal
+        function closeNegotiationModal() {
+            document.getElementById('negotiationModal').style.display = 'none';
+            document.getElementById('customerPrice').value = '';
+            document.getElementById('customerMessageInput').value = '';
+            document.getElementById('chatMessages').innerHTML = '';
+            document.getElementById('confirmBookingButton').disabled = true;
+        }
+        
+        // Send price proposal
+        async function sendPriceProposal() {
+            const price = document.getElementById('customerPrice').value;
+            
+            if (!price || price <= 0) {
+                alert('Please enter a valid price.');
+                return;
+            }
+            
+            try {
+                // Send the proposal to the backend
+                const proposalData = {
+                    customerId: 1, // This would come from the authenticated user
+                    workerId: selectedWorker.id,
+                    proposedPrice: parseFloat(price),
+                    service: currentBookingData.service
+                };
+                
+                const proposal = await window.WorkBuddyAPI.sendPriceProposal(currentBookingId, proposalData);
+                
+                // Add customer message
+                addCustomerMessage(`I propose ₹${price} for this service.`);
+                
+                // Clear input
+                document.getElementById('customerPrice').value = '';
+                
+                // Add system message
+                addSystemMessage("Your price proposal has been sent to the worker.");
+                
+            } catch (error) {
+                console.error('Error sending price proposal:', error);
+                addSystemMessage("Error sending proposal. Please try again.");
+            }
+        }
+        
+        // Send customer message
+        async function sendCustomerMessage() {
+            const message = document.getElementById('customerMessageInput').value.trim();
+            
+            if (!message) {
+                return;
+            }
+            
+            try {
+                // Send the message to the backend
+                const messageData = {
+                    senderId: 1, // This would come from the authenticated user
+                    receiverId: selectedWorker.id,
+                    message: message
+                };
+                
+                const msg = await window.WorkBuddyAPI.sendMessage(currentBookingId, messageData);
+                
+                // Add customer message
+                addCustomerMessage(message);
+                
+                // Clear input
+                document.getElementById('customerMessageInput').value = '';
+                
+            } catch (error) {
+                console.error('Error sending message:', error);
+                addSystemMessage("Error sending message. Please try again.");
+            }
+        }
+        
+        // Add customer message to chat
+        function addCustomerMessage(text) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message customer';
+            messageDiv.innerHTML = `
+                <div class="message-bubble customer-bubble">
+                    ${text}
+                    <div class="message-info">You • Just now</div>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Add worker message to chat
+        function addWorkerMessage(text) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message worker';
+            messageDiv.innerHTML = `
+                <div class="message-bubble worker-bubble">
+                    ${text}
+                    <div class="message-info">${selectedWorker.name} • Just now</div>
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Add system message to chat
+        function addSystemMessage(text) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message system-message';
+            messageDiv.innerHTML = `
+                <div class="message-bubble system-bubble">
+                    ${text}
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Confirm booking
+        async function confirmBooking() {
+            try {
+                // In a real implementation, we would accept the price proposal
+                // For demo purposes, we'll just show a confirmation message
+                
+                alert(`Booking confirmed! Your service "${currentBookingData.service}" with ${currentBookingData.worker.name} has been scheduled for ${currentBookingData.date} at ${currentBookingData.time}.`);
+                
+                // Close modal and reset form
+                closeNegotiationModal();
+                
+                // Reset form
+                document.getElementById('location').value = '';
+                document.getElementById('date').value = '';
+                document.getElementById('time').value = '';
+                document.getElementById('description').value = '';
+                document.getElementById('estimatedPrice').value = '';
+                
+                // Reset selections
+                document.getElementById('selectedServiceName').textContent = 'None';
+                document.getElementById('selectedServiceDescription').textContent = 'Please select a service from the left panel';
+                document.getElementById('workersContainer').innerHTML = '<p style="text-align: center; color: var(--light-text);">Select a service to see available workers</p>';
+                document.getElementById('bookButton').disabled = true;
+                
+                // Remove selected classes
+                document.querySelectorAll('.subcategory').forEach(sub => {
+                    sub.classList.remove('selected');
+                });
+                
+                document.querySelectorAll('.worker-card').forEach(card => {
+                    card.classList.remove('selected');
+                });
+                
+                selectedService = null;
+                selectedWorker = null;
+                currentBookingData = null;
+                currentBookingId = null;
+            } catch (error) {
+                console.error('Error confirming booking:', error);
+                alert('Error confirming booking. Please try again.');
+            }
+        }
+        
+        // Mobile menu toggle
+        document.getElementById('mobile-menu').addEventListener('click', function() {
+            document.getElementById('nav-menu').classList.toggle('active');
+        });
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('negotiationModal');
+            if (event.target == modal) {
+                closeNegotiationModal();
+            }
+        }
+        
+        // Allow sending messages with Enter key
+        document.getElementById('customerMessageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendCustomerMessage();
+            }
+        });
+        
+        // Allow sending price proposals with Enter key
+        document.getElementById('customerPrice').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendPriceProposal();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Language Demo - WorkBuddy</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .demo-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .demo-section {
+            margin-bottom: 2rem;
+        }
+        
+        .demo-section h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .result {
+            padding: 1rem;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+        
+        .language-buttons {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .lang-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 data-translate="workbuddy">WorkBuddy</h1>
+            <nav>
+                <ul>
+                    <li><a href="home.html" data-translate="home">Home</a></li>
+                    <li>
+                        <select id="language-selector" onchange="setCurrentLanguage(this.value)">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी</option>
+                            <option value="mr">मराठी</option>
+                        </select>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="demo-container">
+            <h2>Multi-Language Demo</h2>
+            
+            <div class="demo-section">
+                <h3>Language Selector</h3>
+                <p>Use the dropdown in the header to change the language, or use the buttons below:</p>
+                <div class="language-buttons">
+                    <button class="lang-btn" onclick="setCurrentLanguage('en')">English</button>
+                    <button class="lang-btn" onclick="setCurrentLanguage('hi')">Hindi</button>
+                    <button class="lang-btn" onclick="setCurrentLanguage('mr')">Marathi</button>
+                </div>
+            </div>
+            
+            <div class="demo-section">
+                <h3>Translated Content</h3>
+                <div class="result">
+                    <p data-translate="heroTitle">Connecting Skilled Workers with Customers</p>
+                    <p data-translate="heroDescription">Find reliable plumbers, electricians, painters, and other blue-collar workers in your area.</p>
+                    <p data-translate="joinWorker">Join as a Worker</p>
+                    <p data-translate="joinCustomer">Join as a Customer</p>
+                </div>
+            </div>
+            
+            <div class="demo-section">
+                <h3>Current Language</h3>
+                <div class="result">
+                    <p>Current Language Code: <span id="current-lang">en</span></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p data-translate="footer">&copy; 2025 WorkBuddy. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/translations.js"></script>
+    <script>
+        // Display current language
+        function updateCurrentLanguage() {
+            const currentLang = getCurrentLanguage();
+            document.getElementById('current-lang').textContent = currentLang;
+            document.getElementById('language-selector').value = currentLang;
+        }
+        
+        // Update language display when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCurrentLanguage();
+        });
+    </script>
+</body>
+</html>

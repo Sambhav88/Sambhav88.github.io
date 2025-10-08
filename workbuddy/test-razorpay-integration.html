@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Razorpay Integration Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .test-section h2 {
+            margin-top: 0;
+            color: #555;
+        }
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Razorpay Integration Test</h1>
+        
+        <div class="test-section">
+            <h2>Create Razorpay Order</h2>
+            <div class="form-group">
+                <label for="amount">Amount (₹):</label>
+                <input type="number" id="amount" value="1500" step="0.01">
+            </div>
+            <div class="form-group">
+                <label for="bookingId">Booking ID:</label>
+                <input type="number" id="bookingId" value="1">
+            </div>
+            <button id="createOrderBtn">Create Order</button>
+            <div id="createOrderResult" class="result" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <h2>Test Payment Flow</h2>
+            <p>This will simulate the complete payment flow using Razorpay.</p>
+            <button id="testPaymentBtn">Test Payment Flow</button>
+            <div id="testPaymentResult" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8080/api';
+        
+        // Create Razorpay Order Test
+        document.getElementById('createOrderBtn').addEventListener('click', async function() {
+            const button = this;
+            const resultDiv = document.getElementById('createOrderResult');
+            const amount = document.getElementById('amount').value;
+            const bookingId = document.getElementById('bookingId').value;
+            
+            // Disable button and show processing
+            button.disabled = true;
+            button.textContent = 'Creating Order...';
+            resultDiv.style.display = 'none';
+            
+            try {
+                const orderData = {
+                    amount: parseFloat(amount),
+                    currency: 'INR',
+                    receipt: `receipt_${bookingId}_${Date.now()}`,
+                    bookingId: parseInt(bookingId),
+                    customerName: 'Test Customer',
+                    customerEmail: 'test@example.com',
+                    customerPhone: '9876543210'
+                };
+                
+                const response = await fetch(`${API_BASE_URL}/razorpay/create-order`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.textContent = `Order created successfully!\nOrder ID: ${data.orderId}\nAmount: ₹${data.amount/100}\nCurrency: ${data.currency}`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = `Error creating order: ${data.error}`;
+                }
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `Error creating order: ${error.message}`;
+                resultDiv.style.display = 'block';
+            } finally {
+                // Re-enable button
+                button.disabled = false;
+                button.textContent = 'Create Order';
+            }
+        });
+        
+        // Test Payment Flow
+        document.getElementById('testPaymentBtn').addEventListener('click', async function() {
+            const button = this;
+            const resultDiv = document.getElementById('testPaymentResult');
+            const amount = document.getElementById('amount').value;
+            const bookingId = document.getElementById('bookingId').value;
+            
+            // Disable button and show processing
+            button.disabled = true;
+            button.textContent = 'Testing Payment...';
+            resultDiv.style.display = 'none';
+            
+            try {
+                // This would normally open the Razorpay checkout
+                resultDiv.className = 'result info';
+                resultDiv.textContent = `In a real application, this would open the Razorpay checkout.\n\n` +
+                    `The payment flow would:\n` +
+                    `1. Create a Razorpay order\n` +
+                    `2. Open the Razorpay checkout modal\n` +
+                    `3. Process the payment\n` +
+                    `4. Verify the payment signature\n` +
+                    `5. Update the booking status\n\n` +
+                    `For testing purposes, you can manually test the Razorpay checkout by selecting the Credit Card payment option on the booking confirmation page.`;
+                resultDiv.style.display = 'block';
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `Error testing payment flow: ${error.message}`;
+                resultDiv.style.display = 'block';
+            } finally {
+                // Re-enable button
+                button.disabled = false;
+                button.textContent = 'Test Payment Flow';
+            }
+        });
+    </script>
+</body>
+</html>
